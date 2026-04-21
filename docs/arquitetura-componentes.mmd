@@ -1,0 +1,27 @@
+graph TD
+    subgraph "Client"
+        User((Usuário))
+    end
+
+    subgraph "FastAPI Application"
+        API[Camada API\nFastAPI Controllers]
+        Service[Camada de Serviço\nRegras de Negócio]
+        Advisor[PriorityAdvisor\nComponente de Priorização]
+        Repo[Camada de Repositório\nAcesso a Dados]
+    end
+
+    subgraph "External Providers"
+        LLM[(LLM API\nGemini/OpenAI)]
+    end
+
+    %% Fluxo de Dados
+    User -- Request --> API
+    API -- DTO --> Service
+    Service -- Logic Call --> Advisor
+    Advisor -- Recommendation --> Service
+    Service -- Data Fetch/Push --> Repo
+    Repo -- API Call --> LLM
+    LLM -- AI Response --> Repo
+    Repo -- Entity --> Service
+    Service -- Result --> API
+    API -- JSON Response --> User
