@@ -1,0 +1,32 @@
+# Ignorar arquivos e diretórios específicos do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.Python/
+build/
+dist/
+
+# Ignorar ambiente virtual
+venv/
+env/
+.venv/
+
+# Ignorar cache de testes
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Ignorar configurações locais do editor (ex: VS Code, PyCharm)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar variáveis de ambiente e segredos
+.env
