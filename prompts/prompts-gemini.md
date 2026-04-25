@@ -124,9 +124,3 @@ Contexto: Adicionei diferentes estruturas .
 Objetivo: Gerar uma mensagem de commit no padrao Conventional Commits para cada adição.
 Resposta: Gerar o comando com uma linha de commit para cada adição.
 ```
-### Prompt 5.1 - Mensagem de commit
-``` text
-Contexto: Alteracoes a serem atualizadas no GIT .
-Objetivo: Identificar quais arquivos foram alterados ou incluidos e nao foram atualizados no git.
-Resposta: Gerar um unico comando com uma linha de commit para cada arquivo alterado ou incluido.
-```
