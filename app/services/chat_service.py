@@ -23,10 +23,9 @@ class ChatService:
         """
         Recupera o histórico de mensagens. Retorna None se a sessão não existir.
         """
-        history = self.repository.get_by_session_id(session_id)
-        if not history:
+        if not self.repository.exists(session_id):
             return None
-        return history
+        return self.repository.get_by_session_id(session_id)
 
     async def process_analysis(self, session_id: str, roadmap: DiscoveryRoadmap) -> Optional[Summary]:
         """
@@ -34,8 +33,7 @@ class ChatService:
         Valida a existência da sessão no repositório antes de processar.
         """
         # Verifica se a sessão existe (requisito para atualização via PUT)
-        existing_history = self.repository.get_by_session_id(session_id)
-        if not existing_history:
+        if not self.repository.exists(session_id):
             return None
 
         # Aciona o PriorityAdvisor para análise (LLM com fallback local)
