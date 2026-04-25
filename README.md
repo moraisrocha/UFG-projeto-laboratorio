@@ -1,54 +1,95 @@
-# Chatbot de Requisitos Funcionais (MVP)
+# Data Engineering Discovery Chatbot (MVP)
 
-Este projeto é um MVP de um chatbot inteligente desenvolvido em Python, focado em responder perguntas e auxiliar na definição de requisitos funcionais de software utilizando Inteligência Artificial.
+Este projeto é uma micro-API desenvolvida com FastAPI para auxiliar engenheiros e arquitetos de dados na fase de descoberta de requisitos. O sistema utiliza Inteligência Artificial (OpenAI GPT) para analisar roadmaps técnicos, volumetria e complexidade, sugerindo stacks tecnológicas apropriadas.
 
-## 🎯 Objetivo
+## 🚀 Funcionalidades
 
-Automatizar e qualificar o processo de levantamento de requisitos, permitindo que analistas e desenvolvedores interajam com uma IA para validar fluxos, identificar lacunas e gerar documentação funcional preliminar de forma ágil.
+- **Discovery Interativo:** Registro de mensagens e interações para coleta de requisitos de dados.
+- **Análise de Prioridade (AI):** Avaliação automática de complexidade e sugestão de stack técnica.
+- **Falha Segura (Fallback):** Sistema de heurística local que assume o processamento caso a chave da API não exista ou o serviço de LLM esteja indisponível.
+- **Arquitetura Limpa:** Separação clara entre camadas de API, Serviços, Modelos e Repositórios.
 
-## 🛠 Stack Tecnológica
+## 🏗️ Arquitetura
 
-- **Linguagem:** Python 3.10+
-- **Ambiente Virtual:** `venv`
-- **IA/LLM:** OpenAI API (ou Gemini API)
-- **Gerenciamento de Dependências:** `pip`
-- **Controle de Versão:** Git
+A aplicação segue o padrão de camadas para garantir testabilidade e manutenção:
 
-## 🚀 Como Rodar Localmente
+- **API (FastAPI):** Define os endpoints e gerencia a injeção de dependência via `app.state`.
+- **Services:** Contém a lógica de negócio (`ChatService`) e o motor de decisão técnica (`PriorityAdvisor`).
+- **Models:** Define as estruturas de dados usando Pydantic v2.
+- **Repository:** Gerencia a persistência (atualmente em memória para o MVP).
 
-Siga os passos abaixo para configurar o ambiente em sua máquina:
+## 🛠️ Tecnologias Utilizadas
 
-1. **Clonar o repositório:**
+- **Linguagem:** Python 3.11+
+- **Framework Web:** FastAPI
+- **Modelos de Linguagem:** OpenAI GPT-3.5 Turbo (via biblioteca `openai`)
+- **Validação de Dados:** Pydantic v2
+- **Servidor ASGI:** Uvicorn
+- **Testes:** Pytest
+
+## 📥 Instalação e Configuração
+
+1. **Clone o repositório:**
    ```bash
    git clone <url-do-repositorio>
-   cd <nome-do-diretorio>
+   cd LABORATORIO-PROJETO
    ```
 
-2. **Configurar o ambiente virtual:**
+2. **Crie e ative o ambiente virtual:**
    ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate  # No Windows: .venv\Scripts\activate
+   python -m venv venv
+   source venv/bin/activate  # No Windows: venv\Scripts\activate
    ```
 
-3. **Instalar dependências:**
+3. **Instale as dependências:**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Configurar variáveis de ambiente:**
-   Crie um arquivo `.env` na raiz do projeto e adicione sua chave de API:
+4. **Configure as variáveis de ambiente:**
+   Crie um arquivo `.env` na raiz do projeto:
    ```env
-   API_KEY=seu_token_aqui
+   OPENAI_API_KEY=sua_chave_aqui  # Opcional: Se ausente, usará a heurística local
    ```
 
-5. **Executar a aplicação:**
-   ```bash
-   uvicorn app.main:app --reload
-   ```
+## ⚙️ Execução
 
-## 🗺️ Roadmap de Releases
+Para iniciar o servidor de desenvolvimento:
 
-- **v0.1 (MVP):** API base com FastAPI, integração básica com LLM (Gemini/OpenAI) e endpoint de saúde.
-- **v0.2:** Suporte para exportação de requisitos em formato Markdown e PDF.
-- **v0.3:** Interface Web (Streamlit ou Flask) e persistência de histórico de conversas.
-- **v1.0:** Integração direta com ferramentas de gestão (Jira/Azure DevOps).
+```bash
+python app/main.py
+```
+A API estará disponível em `http://localhost:8000`. Você pode acessar a documentação interativa (Swagger UI) em `http://localhost:8000/docs`.
+
+## 🧪 Testes
+
+A suíte de testes cobre a lógica de serviços, heurísticas de prioridade e endpoints da API.
+
+```bash
+pytest app/tests/
+```
+
+## 🤖 Uso da IA e Sistema de Prioridade
+
+O componente `PriorityAdvisor` orquestra a inteligência da aplicação:
+
+1. **Caminho Principal (LLM):** Se `OPENAI_API_KEY` estiver configurada, a API envia o roadmap para o GPT-3.5, que retorna uma análise técnica detalhada em formato JSON.
+2. **Timeout & Fallback:** Se a chamada à IA demorar mais de 15 segundos ou falhar, o sistema aciona automaticamente a **Heurística Local**.
+3. **Heurística Local (Custo Zero):** Uma lógica baseada em regras de negócio avalia o volume (GB/dia) e a quantidade de fontes para classificar a complexidade em *BAIXA*, *MÉDIA* ou *ALTA*.
+
+## ⚠️ Limitações do MVP
+
+- **Persistência Volátil:** Os dados são armazenados em memória. Se o servidor for reiniciado, o histórico das sessões será perdido.
+- **Provedores de IA:** Atualmente otimizado para OpenAI (integração com Gemini mapeada no backlog).
+- **Autenticação:** Não há controle de acesso de usuários nesta fase.
+
+## 📈 Próximos Passos
+
+- [ ] **Persistência em Banco de Dados:** Migrar do repositório em memória para MongoDB ou PostgreSQL.
+- [ ] **Containerização:** Criar `Dockerfile` e `docker-compose.yml` para facilitar o deploy.
+- [ ] **Suporte a Múltiplos Provedores:** Adicionar suporte ao Google Gemini via `google-generativeai`.
+- [ ] **Interface CLI:** Desenvolver uma ferramenta de linha de comando usando `Typer` e `Rich` para interações rápidas.
+
+---
+**Projeto desenvolvido para o Laboratório de Projeto - Especialização UFG**
+**Responsável:** Rogério Morais Rocha
