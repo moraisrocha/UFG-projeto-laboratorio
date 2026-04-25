@@ -126,7 +126,7 @@ Resposta: Gerar o comando com uma linha de commit para cada adição.
 ```
 ### Prompt 5.1 - Mensagem de commit
 ``` text
-Contexto: Alteracoes sem commit .
-Objetivo: Gerar uma mensagem de commit no padrao Conventional Commits para cada arquivo nao atualizado no GIT.
-Resposta: Gerar o comando com uma linha de commit para cada aarquivo alterado sem atualizacao no GIT.
+Contexto: Alteracoes a serem atualizadas no GIT .
+Objetivo: Identificar quais arquivos foram alterados ou incluidos e nao foram atualizados no git.
+Resposta: Gerar um unico comando com uma linha de commit para cada arquivo alterado ou incluido.
 ```
