@@ -10,16 +10,17 @@ class ChatRepository:
         # Armazenamento indexado por session_id para recuperação rápida do histórico
         self._storage: Dict[str, List[InterfaceChat]] = {}
 
+    def exists(self, session_id: str) -> bool:
+        """
+        Verifica se uma sessão de chat existe no repositório.
+        """
+        return session_id in self._storage
+
     def create(self, chat_entry: InterfaceChat) -> InterfaceChat:
         """
         Persiste uma nova interação no histórico da sessão correspondente.
         """
-        session_id = chat_entry.session_id
-        
-        if session_id not in self._storage:
-            self._storage[session_id] = []
-            
-        self._storage[session_id].append(chat_entry)
+        self._storage.setdefault(chat_entry.session_id, []).append(chat_entry)
         return chat_entry
 
     def get_by_session_id(self, session_id: str) -> List[InterfaceChat]:
