@@ -1,22 +1,32 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Request
 from typing import List
 from app.models.chatbot_engdados import InterfaceChat, DiscoveryRoadmap, Summary
 from app.services.chat_service import ChatService
 from app.services.priority_advisor import PriorityAdvisor
 from prompts.chatbot_engdados_repository import ChatRepository
 
-# Inicialização de componentes para o MVP (In-memory logic)
-# Em produção, usaríamos um container de DI ou injeção via parâmetros do app.
-repo = ChatRepository()
-advisor = PriorityAdvisor()
-chat_instance = ChatService(repo, advisor)
+# Provedores de Dependência Nativos
 
-def get_chat_service() -> ChatService:
+def get_repository(request: Request) -> ChatRepository:
     """
-    Provider para injeção de dependência do ChatService.
-    Utiliza a instância global para manter o estado do repositório em memória.
+    Recupera o repositório singleton armazenado no estado da aplicação.
     """
-    return chat_instance
+    return request.app.state.repository
+
+def get_advisor(request: Request) -> PriorityAdvisor:
+    """
+    Recupera o PriorityAdvisor do estado da aplicação.
+    """
+    return request.app.state.advisor
+
+def get_chat_service(
+    repo: ChatRepository = Depends(get_repository),
+    advisor: PriorityAdvisor = Depends(get_advisor)
+) -> ChatService:
+    """
+    Constrói o serviço de chat injetando suas dependências necessárias.
+    """
+    return ChatService(repository=repo, advisor=advisor)
 
 router = APIRouter(prefix="/chatbot", tags=["Chatbot"])
 
