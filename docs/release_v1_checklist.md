@@ -12,7 +12,7 @@
 - [ ] **README.md:** Revisar se as instruções de instalação via `Makefile` estão claras.
 - [ ] **Histórico de Prompts:** Garantir que o `prompts-gemini.md` está atualizado com as últimas interações.
 - [ ] **Backlog:** Marcar como concluídos os itens da "Release 1: Core" no arquivo `docs/backlog.md`.
-- [ ] **Licença:** (Opcional) Adicionar um arquivo LICENSE se o projeto for open-source.
+- [x] **Licença:** Arquivo LICENSE (MIT) adicionado para definir termos de uso.
 
 ## 🚀 Procedimento de Publicação (Git/GitHub)
 
