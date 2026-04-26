@@ -9,6 +9,12 @@ Este projeto é uma micro-API desenvolvida com FastAPI para auxiliar engenheiros
 - **Falha Segura (Fallback):** Sistema de heurística local que assume o processamento caso a chave da API não exista ou o serviço de LLM esteja indisponível.
 - **Arquitetura Limpa:** Separação clara entre camadas de API, Serviços, Modelos e Repositórios.
 
+## 📋 Pré-requisitos
+
+- Python 3.11 ou superior
+- Make (opcional, para automação)
+- Git
+
 ## 🏗️ Arquitetura
 
 A aplicação segue o padrão de camadas para garantir testabilidade e manutenção:
@@ -17,6 +23,20 @@ A aplicação segue o padrão de camadas para garantir testabilidade e manutenç
 - **Services:** Contém a lógica de negócio (`ChatService`) e o motor de decisão técnica (`PriorityAdvisor`).
 - **Models:** Define as estruturas de dados usando Pydantic v2.
 - **Repository:** Gerencia a persistência (atualmente em memória para o MVP).
+
+### Estrutura de Pastas
+```text
+.
+├── app/
+│   ├── api/          # Rotas e Injeção de Dependência
+│   ├── models/       # Modelos Pydantic e Enums
+│   ├── services/     # Lógica de Negócio e PriorityAdvisor
+│   └── tests/        # Suíte de testes (Unitários e Integração)
+├── docs/             # Documentação de escopo e arquitetura
+├── prompts/          # Histórico de engenharia de prompts
+├── Makefile          # Automação de tarefas
+└── main.py           # Ponto de entrada da aplicação
+```
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -29,37 +49,40 @@ A aplicação segue o padrão de camadas para garantir testabilidade e manutenç
 
 ## 📥 Instalação e Configuração
 
-1. **Clone o repositório:**
-   ```bash
-   git clone <url-do-repositorio>
-   cd LABORATORIO-PROJETO
-   ```
+**Via Makefile (Recomendado):**
+```bash
+make install
+cp .env.example .env
+```
 
-2. **Crie e ative o ambiente virtual:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # No Windows: venv\Scripts\activate
-   ```
+**Manualmente:**
 
-3. **Instale as dependências:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Configure as variáveis de ambiente:**
-   Crie um arquivo `.env` na raiz do projeto:
-   ```env
-   OPENAI_API_KEY=sua_chave_aqui  # Opcional: Se ausente, usará a heurística local
-   ```
+1. **Clone e entre no diretório:** `git clone <url> && cd LABORATORIO-PROJETO`
+2. **Venv:** `python3 -m venv .venv && source .venv/bin/activate`
+3. **Deps:** `pip install -r requirements.txt`
+4. **Env:** `cp .env.example .env` (e preencha sua chave OpenAI)
 
 ## ⚙️ Execução
 
 Para iniciar o servidor de desenvolvimento:
 
 ```bash
-python3 -m app.main
+make run
 ```
 A API estará disponível em `http://localhost:8000`. Você pode acessar a documentação interativa (Swagger UI) em `http://localhost:8000/docs`.
+
+## 🛠️ Automação com Makefile
+
+Para simplificar o fluxo de desenvolvimento, o projeto inclui um `Makefile` com comandos pré-configurados:
+
+| Comando | Descrição |
+| :--- | :--- |
+| `make install` | Instala as dependências listadas no arquivo `requirements.txt`. |
+| `make run` | Inicia o servidor de desenvolvimento FastAPI através do módulo `app.main`. |
+| `make test` | Executa a suíte completa de testes unitários e de integração utilizando o `pytest`. |
+| `make lint` | Realiza a formatação automática do código seguindo os padrões do `black`. |
+| `make clean` | Remove arquivos temporários e caches de execução (`__pycache__`, `.pytest_cache`). |
+| `make help` | Exibe a lista de comandos disponíveis e suas descrições. |
 
 ## 🧪 Testes
 
