@@ -1,6 +1,7 @@
 # Variáveis para facilitar a manutenção
-PYTHON = python3
-PIP = pip
+VENV = .venv
+PYTHON = $(VENV)/bin/python3
+PIP = $(VENV)/bin/pip
 APP_MODULE = app.main
 TEST_DIR = app/tests
 
@@ -15,6 +16,7 @@ help:
 	@echo "  make clean    - Remove arquivos temporários e caches de execução"
 
 install:
+	python3 -m venv $(VENV)
 	$(PIP) install -r requirements.txt
 
 run:
