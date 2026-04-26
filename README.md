@@ -37,7 +37,7 @@ A aplicação segue o padrão de camadas para garantir testabilidade e manutenç
 
 2. **Crie e ative o ambiente virtual:**
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # No Windows: venv\Scripts\activate
    ```
 
@@ -57,7 +57,7 @@ A aplicação segue o padrão de camadas para garantir testabilidade e manutenç
 Para iniciar o servidor de desenvolvimento:
 
 ```bash
-python app/main.py
+python3 -m app.main
 ```
 A API estará disponível em `http://localhost:8000`. Você pode acessar a documentação interativa (Swagger UI) em `http://localhost:8000/docs`.
 
