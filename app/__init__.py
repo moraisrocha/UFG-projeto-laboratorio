@@ -1,0 +1,1 @@
+# Arquivo necessário para tratar 'app' como um pacote Python
