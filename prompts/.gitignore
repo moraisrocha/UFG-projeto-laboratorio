@@ -30,3 +30,6 @@ htmlcov/
 
 # Ignorar variáveis de ambiente e segredos
 .env
+
+# Documentos de apresentação interna (não subir para o github)
+docs/roteiro_chatbot_mvp.md
