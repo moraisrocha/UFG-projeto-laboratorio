@@ -3,7 +3,7 @@ from typing import List
 from app.models.chatbot_engdados import InterfaceChat, DiscoveryRoadmap, Summary
 from app.services.chat_service import ChatService
 from app.services.priority_advisor import PriorityAdvisor
-from prompts.chatbot_engdados_repository import ChatRepository
+from app.models.chatbot_engdados_repository import ChatRepository
 
 # Provedores de Dependência Nativos
 

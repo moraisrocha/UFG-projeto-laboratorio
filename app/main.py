@@ -33,7 +33,7 @@ async def root():
     """
     return {
         "message": "Bem-vindo ao API do Chatbot de Requisitos Funcionais",
-        "api_key_status": "Configurada" if os.getenv("API_KEY") else "Ausente"
+        "api_key_status": "Configurada" if os.getenv("OPENAI_API_KEY") else "Ausente"
     }
 
 @app.get("/health")
