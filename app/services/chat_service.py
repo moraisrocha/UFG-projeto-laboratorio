@@ -1,7 +1,7 @@
 from typing import List, Optional
 from app.models.chatbot_engdados import InterfaceChat, DiscoveryRoadmap, Summary
 from app.services.priority_advisor import PriorityAdvisor
-from prompts.chatbot_engdados_repository import ChatRepository
+from app.models.chatbot_engdados_repository import ChatRepository
 
 class ChatService:
     """
