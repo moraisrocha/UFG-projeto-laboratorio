@@ -16,7 +16,8 @@ async def test_heuristic_low_complexity(advisor):
         target_destination="DuckDB",
         data_sources=["CSV Local"],
         daily_volume_gb=5,
-        is_real_time=False
+        is_real_time=False,
+        transformation_steps=["Limpeza"] # Adicionado campo obrigatório
     )
     result = advisor._get_local_heuristic(roadmap)
     
@@ -31,7 +32,8 @@ async def test_heuristic_medium_complexity(advisor):
         target_destination="PostgreSQL",
         data_sources=["API Externa", "DB Legado", "S3"],
         daily_volume_gb=100,
-        is_real_time=False
+        is_real_time=False,
+        transformation_steps=["Normalização"] # Adicionado campo obrigatório
     )
     result = advisor._get_local_heuristic(roadmap)
     
@@ -46,7 +48,8 @@ async def test_heuristic_high_complexity_by_volume(advisor):
         target_destination="Delta Lake",
         data_sources=["Logs"],
         daily_volume_gb=1000,
-        is_real_time=False
+        is_real_time=False,
+        transformation_steps=["Particionamento"] # Adicionado campo obrigatório
     )
     result = advisor._get_local_heuristic(roadmap)
     
@@ -60,7 +63,8 @@ async def test_heuristic_high_complexity_by_real_time(advisor):
         target_destination="Redis",
         data_sources=["Sensors"],
         daily_volume_gb=1,
-        is_real_time=True
+        is_real_time=True,
+        transformation_steps=["Agregação"] # Adicionado campo obrigatório
     )
     result = advisor._get_local_heuristic(roadmap)
     
@@ -76,7 +80,8 @@ async def test_fallback_on_llm_exception(advisor):
         target_destination="S3",
         data_sources=["Fonte"],
         daily_volume_gb=10,
-        is_real_time=False
+        is_real_time=False,
+        transformation_steps=["Filtragem"] # Adicionado campo obrigatório
     )
 
     with patch.object(advisor, '_call_llm', side_effect=Exception("OpenAI Offline")):
@@ -99,7 +104,8 @@ async def test_fallback_on_timeout(advisor):
         target_destination="Cloud",
         data_sources=["Source"],
         daily_volume_gb=500,
-        is_real_time=False
+        is_real_time=False,
+        transformation_steps=["Transformação"] # Adicionado campo obrigatório
     )
 
     with patch.object(advisor, '_call_llm', side_effect=slow_response):

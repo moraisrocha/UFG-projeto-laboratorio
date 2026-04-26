@@ -1,0 +1,1 @@
+# Permite que o pytest trate a pasta tests como um pacote

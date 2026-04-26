@@ -65,7 +65,8 @@ def test_analyze_roadmap_success():
         "target_destination": "BigQuery",
         "data_sources": ["MySQL", "Salesforce"],
         "daily_volume_gb": 150.0,
-        "is_real_time": False
+        "is_real_time": False,
+        "transformation_steps": ["Limpeza", "Agregação"] # Adicionado campo obrigatório
     }
     response = client.put(f"/chatbot/{session_id}/analyze", json=roadmap_payload)
     
@@ -76,6 +77,12 @@ def test_analyze_roadmap_success():
 
 def test_analyze_roadmap_not_found():
     """Valida o erro 404 ao tentar analisar um roadmap de sessão inexistente."""
-    roadmap_payload = {"target_destination": "X", "data_sources": [], "daily_volume_gb": 0, "is_real_time": False}
+    roadmap_payload = { # Payload válido para passar na validação Pydantic
+        "target_destination": "X",
+        "data_sources": ["Source A"],
+        "daily_volume_gb": 1.0,
+        "is_real_time": False,
+        "transformation_steps": ["Load"]
+    }
     response = client.put("/chatbot/sessao-inexistente/analyze", json=roadmap_payload)
     assert response.status_code == 404

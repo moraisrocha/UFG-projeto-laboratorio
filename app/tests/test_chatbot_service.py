@@ -59,6 +59,7 @@ async def test_get_history_returns_none_when_session_not_found(chat_service, moc
     """Garante que sessões inexistentes retornem None (conforme contrato do serviço)."""
     # Arrange
     mock_repository.get_by_session_id.return_value = []
+    mock_repository.exists.return_value = False # Simula que a sessão não existe
 
     # Act
     history = await chat_service.get_history("ghost-session")
@@ -71,7 +72,13 @@ async def test_process_analysis_returns_summary_for_existing_session(chat_servic
     """Verifica se a análise é acionada apenas se a sessão for válida."""
     # Arrange
     session_id = "active-session"
-    roadmap = DiscoveryRoadmap(target_destination="S3", data_sources=["ERP"], daily_volume_gb=10.0)
+    roadmap = DiscoveryRoadmap(
+        target_destination="S3",
+        data_sources=["ERP"],
+        daily_volume_gb=10.0,
+        is_real_time=False,
+        transformation_steps=["Limpeza", "Normalização"] # Adicionado campo obrigatório
+    )
     expected_summary = Summary(
         project_title="Análise Técnica",
         technical_overview="Resumo",
@@ -80,7 +87,7 @@ async def test_process_analysis_returns_summary_for_existing_session(chat_servic
         structured_markdown="# MD"
     )
     
-    mock_repository.get_by_session_id.return_value = [MagicMock()] # Simula histórico existente
+    mock_repository.exists.return_value = True # Simula que a sessão existe
     mock_advisor.analyze_project.return_value = expected_summary
 
     # Act
@@ -95,7 +102,14 @@ async def test_process_analysis_returns_none_when_session_missing(chat_service, 
     """Garante que a análise falha silenciosamente se a sessão não existir."""
     # Arrange
     mock_repository.get_by_session_id.return_value = []
-    roadmap = DiscoveryRoadmap(target_destination="Lake", data_sources=[], daily_volume_gb=0)
+    mock_repository.exists.return_value = False # Simula que a sessão não existe
+    roadmap = DiscoveryRoadmap( # Roadmap válido para passar na validação Pydantic
+        target_destination="Lake",
+        data_sources=["Logs"],
+        daily_volume_gb=1.0,
+        is_real_time=False,
+        transformation_steps=["Agregação"]
+    )
 
     # Act
     result = await chat_service.process_analysis("invalid-id", roadmap)
