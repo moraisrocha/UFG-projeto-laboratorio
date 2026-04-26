@@ -1,4 +1,12 @@
-# Capitulo 01 - Prompts para Gemini
+# Índice
+1. [Capitulo 1 - Prompts para Gemini](#capitulo-1---prompts-para-gemini)
+2. [Capitulo 2 - Prompts para Gemini/Copilot](#capítulo-2---prompts-para-gemini-copilot)
+3. [Capitulo 3 - Prompts para Gemini/Copilot](#capítulo-3---prompts-para-gemini-copilot)
+4. [Capitulo 4 - Prompts para Gemini/Copilot](#capítulo-4---prompts-para-gemini-copilot)
+5. [Capitulo 5 - Prompts para Gemini/Copilot](#capítulo-5---prompts-para-gemini-copilot)
+6. [Prompt Commit](#prompt-commit)
+
+# Capitulo 1 - Prompts para Gemini
 
 ## Prompt 1 - .gitignore
 ``` text
@@ -117,10 +125,70 @@ Resposta: Gerar apenas codigo no arquivo denominado chatbot_routes.py no diretor
 1.  Create the ChatService class to integrate ChatRepository and PriorityAdvisor logic."**
 2.  Implement a POST route in chatbot_routes.py to allow creating a new chat session message before analysis.
 ``` 
+# Capitulo 4 - Prompts para Gemini/Copilot
 
-## Prompt 5 - Mensagem de commit
-``` text
-Contexto: Adicionei diferentes estruturas .
-Objetivo: Gerar uma mensagem de commit no padrao Conventional Commits para cada adição.
-Resposta: Gerar o comando com uma linha de commit para cada adição.
+## Prompt 1 - Testes do service
+```text
+Contexto: Tenho ChatService com criacao de mensagens e persistencia em memoria.
+Objetivo: Gerar suite Pytest cobrindo a criacao de perguntas e respostas.
+Estilo: Testes claros, nomes descritivos e fixtures simples.
+Resposta: Codigo completo de tests/test_chatbot_service.py
+```
+
+## Prompt 2 - Testes do PriorityAdvisor
+```text
+Contexto: PriorityAdvisor possui heuristica local e fallback quando chamada externa falha.
+Objetivo: Gerar testes para os tres niveis de prioridade e para fallback.
+Estilo: Usar monkeypatch quando necessario.
+Resposta: Gerar apenas o codigo no arquivo denominado test_priority_advisor.py no diretorio app/tests/ 
+```
+
+## Prompt 3 - Testes de API
+```text
+Contexto: Chatbot FastAPI
+Objetivo: Criar testes de rota com TestClient para status 201, 200 e 404.
+Estilo: Isolar dependencia de repositorio para evitar estado global entre testes.
+Resposta: Gerar apenas o codigo no arquivo denominado test_task_routes.py no diretorio app/tests/
+```
+
+## Prompt 4 - Refatoracao DRY/SRP
+```text
+Analise os arquivos app/services/chat_service.py e app/models/chatbot_engdados_repository.py
+Objetivo: Sugerir refatoracao com foco em DRY e SRP sem mudar comportamento externo.
+Resposta: 1) lista de mudancas propostas 2) patch sugerido por arquivo.
+```
+
+## Prompt 5 - README final tecnico
+```text
+Contexto: MVP de micro-API de tarefas com prioridade assistida por IA.
+Objetivo: Gerar README completo com instalacao, execucao, testes, arquitetura, uso da IA,limitacoes e proximos passos.
+Estilo: Markdown profissional e objetivo.
+Resposta: README inteiro
+```
+
+## Prompt 6 - Revisao final de qualidade
+```text
+Com base no codigo e nos testes atuais, gere um checklist com:
+- Riscos tecnicos restantes
+- Gaps de cobertura de teste
+- Melhorias prioritarias para a proxima release
+Resposta em bullets curtos.
+```
+
+# Capitulo 5 - Prompts para Gemini/Copilot
+
+**antes de dar sequencia, solicitaremos a gemini para visualizarmos o chatbot funcionando**
+
+# Prompt - 1 Pedido para visualizar funcionamento
+```text
+Contexto: Mostrar o funcionamento do chatbot
+Objetivo: Demonstrar com alguns casos as perguntas e respostas sendo realizadas por uma pessoa
+Resposta: Descreva passo a passo das ações necessárias para demonstrar os casos e também descreva o resultado dos casos
+```
+
+# Prompt Commit
+```text
+Contexto: Realizar commit em camadas separadas
+Objetivo: Realizar o commit no padrao conventional separado por camadas das alteracoes em diff, com os devidos comentarios refletindo as ultimas alteracoes. Incluir o arquivo de prompts-gemini.md no commit informando que novos prompts foram incluidos ou alterados
+Resposta: Criar um único comando para aplicar os commits separados por camadas
 ```
