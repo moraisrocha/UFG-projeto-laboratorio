@@ -21,7 +21,7 @@ class DiscoveryRoadmap(BaseModel):
     """Mapeia os requisitos técnicos extraídos durante o discovery."""
     data_sources: List[str] = Field(
         ..., 
-        min_items=1, 
+        min_length=1, 
         description="Lista de fontes de dados (ex: APIs, Bancos SQL, S3)"
     )
     daily_volume_gb: float = Field(
