@@ -55,5 +55,13 @@ ação:
 "address": "Logradouro 48"}
 4. cenários de testes inválidos
 
-formato: saída em JSON estruturado, adequado para automação com REST
+formato: 
+1. cenários de teste com saída em JSON estruturado, adequado para automação com REST
+2. código de testes em JAVA
+3. explicações em formato markdown
+
+resposta: 
+1.arquivo api-cenarios-testes.json
+2.arquivo api-code-testes.java
+3.arquivo api-explicacao-testes.md
 
