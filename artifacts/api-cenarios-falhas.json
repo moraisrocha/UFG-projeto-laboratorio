@@ -1,0 +1,160 @@
+[
+  {
+    "id": "TC-Auth-001",
+    "title": "Token com assinatura incorreta - GET /api/v1/products/{id}",
+    "description": "Rejeitar JWT cuja assinatura não corresponde à chave pública/segredo que a API usa.",
+    "precondition": "Existe um produto com id=99; chave pública/segredo válido configurado no servidor.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer <token_com_assinatura_incorreta>"
+    },
+    "body": null,
+    "expectedStatus": 401,
+    "expectedResponseContains": ["invalid signature","signature"],
+    "notes": "Mensagem não deve vazar segredos. Verificar código e corpo de resposta.",
+    "severity": "critical"
+  },
+  {
+    "id": "TC-Auth-002",
+    "title": "Token expirado por poucos segundos (exp = now - 5s) - GET /api/v1/products/{id}",
+    "description": "Rejeitar token JWT com claim exp expirado por 5 segundos; validar comportamento com e sem clock skew.",
+    "precondition": "Produto id=99 existe; servidor pode ter clock skew configurável.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer <token_expirado_5s>"
+    },
+    "body": null,
+    "expectedStatus": 401,
+    "expectedResponseContains": ["token expired","expired"],
+    "notes": "Executar variação com clock-skew=0s e clock-skew>=5s se a API suportar tolerância.",
+    "severity": "high"
+  },
+  {
+    "id": "TC-Auth-003",
+    "title": "Token sem claim 'sub' - GET /api/v1/products/{id}",
+    "description": "Rejeitar token que não apresenta o claim 'sub' (identificador do usuário).",
+    "precondition": "Produto id=99 existe.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer <token_sem_sub>"
+    },
+    "body": null,
+    "expectedStatus": 400,
+    "expectedResponseContains": ["missing claim","sub"],
+    "notes": "Algumas APIs podem retornar 401 em vez de 400; ajustar conforme a especificação.",
+    "severity": "medium"
+  },
+  {
+    "id": "TC-Auth-004",
+    "title": "Token sem claim 'exp' - GET /api/v1/products/{id}",
+    "description": "Verificar política do servidor quando o token não contém exp.",
+    "precondition": "Produto id=99 existe.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer <token_sem_exp>"
+    },
+    "body": null,
+    "expectedStatus": 400,
+    "expectedResponseContains": ["missing claim","exp"],
+    "notes": "Documentar aceitação ou rejeição de tokens sem exp; se aceitável, validar duração máxima permitida.",
+    "severity": "medium"
+  },
+  {
+    "id": "TC-Auth-005",
+    "title": "Token emitido para outro público (aud mismatch) - GET /api/v1/products/{id}",
+    "description": "Rejeitar tokens cujo claim 'aud' não contém ou não corresponde ao público esperado pela API.",
+    "precondition": "Produto id=99 existe; API espera aud='my-api'.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer <token_com_aud_incorreto>"
+    },
+    "body": null,
+    "expectedStatus": 401,
+    "expectedResponseContains": ["invalid audience","aud"],
+    "notes": "Cobrir token com aud ausente e aud diferente.",
+    "severity": "high"
+  },
+  {
+    "id": "TC-Auth-006",
+    "title": "Token com alg inválido (alg=none) - GET /api/v1/products/{id}",
+    "description": "Tokens com header.alg alterado devem ser rejeitados.",
+    "precondition": "Produto id=99 existe.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer <token_alg_none>"
+    },
+    "body": null,
+    "expectedStatus": 401,
+    "expectedResponseContains": ["invalid algorithm","alg"],
+    "notes": "Verificar rejeição de tokens com troca de algoritmo (ex: RS256 -> HS256).",
+    "severity": "critical"
+  },
+  {
+    "id": "TC-Auth-007",
+    "title": "Token truncado / corrompido - GET /api/v1/products/{id}",
+    "description": "Rejeitar tokens que não são formatos JWT válidos (base64 inválido, partes faltando).",
+    "precondition": "Produto id=99 existe.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer abc.def"
+    },
+    "body": null,
+    "expectedStatus": 400,
+    "expectedResponseContains": ["malformed token","invalid token"],
+    "notes": "API pode devolver 400 ou 401; padronizar testes conforme implementação.",
+    "severity": "medium"
+  },
+  {
+    "id": "TC-Auth-008",
+    "title": "Token revogado - GET /api/v1/products/{id}",
+    "description": "Se a API suporta revogação (blacklist), tokens revogados devem ser rejeitados.",
+    "precondition": "Emitir token válido e marcar como revogado no servidor (ou invalidar sessão).",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Bearer <token_revogado>"
+    },
+    "body": null,
+    "expectedStatus": 401,
+    "expectedResponseContains": ["token revoked","invalid token","session invalid"],
+    "notes": "Dependente da estratégia de revogação (lista em cache, DB, introspecção).",
+    "severity": "high"
+  },
+  {
+    "id": "TC-Auth-009",
+    "title": "Authorization header ausente - GET /api/v1/products/{id}",
+    "description": "Rejeitar requisições sem cabeçalho Authorization.",
+    "precondition": "Produto id=99 existe.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {},
+    "body": null,
+    "expectedStatus": 401,
+    "expectedResponseContains": ["token not provided","authorization header missing"],
+    "notes": "Verificar código e mensagem de erro padronizados.",
+    "severity": "low"
+  },
+  {
+    "id": "TC-Auth-010",
+    "title": "Authorization header mal formado - GET /api/v1/products/{id}",
+    "description": "Rejeitar cabeçalhos com esquema incorreto (ex.: 'Token abc.def.ghi').",
+    "precondition": "Produto id=99 existe.",
+    "method": "GET",
+    "url": "/api/v1/products/99",
+    "headers": {
+      "Authorization": "Token abc.def.ghi"
+    },
+    "body": null,
+    "expectedStatus": 401,
+    "expectedResponseContains": ["malformed authorization header","invalid scheme"],
+    "notes": "Cobrir variações: falta do prefixo Bearer, prefixo em caixa diferente, esquemas inválidos.",
+    "severity": "low"
+  }
+]
